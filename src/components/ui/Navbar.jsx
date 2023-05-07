@@ -59,6 +59,7 @@ const rotate = keyframes`
 `;
 
 const Container = styled.div`
+  position: fixed;
   height: 9svh;
   padding: 0;
   margin: 0;
@@ -166,7 +167,7 @@ const Links = styled.div`
     font-family: "Montserrat", sans-serif;
     font-weight: 700;
     font-size: 14px;
-    color: #1c1c1c;
+    color: white;
     letter-spacing: 1px;
 
     &:hover {

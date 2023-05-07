@@ -7,11 +7,15 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.2.3",
+    "gsap": "^3.11.5",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+    "stats-js": "^1.0.1",
+    "stats.js": "^0.17.0",
     "styled-components": "^5.3.10",
+    "three": "^0.152.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
