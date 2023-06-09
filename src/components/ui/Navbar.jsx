@@ -59,7 +59,6 @@ const rotate = keyframes`
 `;
 
 const Container = styled.div`
-  position: fixed;
   height: 9svh;
   padding: 0;
   margin: 0;

@@ -17,11 +17,13 @@ import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass";
-import { BokehPass } from "three/examples/jsm/postprocessing/BokehPass";
 
 export default function Scene() {
   const mountRef = useRef(null);
   gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.defaults({
+    inmediateRender: false,
+  });
 
   useEffect(() => {
     const currentMount = mountRef.current;
@@ -31,12 +33,9 @@ export default function Scene() {
 
     // Renderer
     const renderer = new THREE.WebGLRenderer({
-      antialias: true,
       alpha: true,
     });
-    renderer.shadowMap.enable = false;
-    renderer.setClearColor(0xf2f2f2, 0);
-    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.setClearColor(0x1f1e23, 1);
     renderer.toneMapping = THREE.ReinhardToneMapping;
     renderer.toneMappingExposure = 0.4;
     renderer.physicallyCorrectLights = true;
@@ -76,40 +75,83 @@ export default function Scene() {
     // Texture loader
     const loader = new THREE.TextureLoader();
 
+    // Variable to see if the user is on mobile based on viewport width
+    const isMobile = window.innerWidth < 1024;
+
     // Load 3D model
     gltfLoader.load("assets/models/beer_can.glb", function (gltf) {
-      gltf.scene.rotation.z = Math.PI / -14;
       gltf.scene.scale.set(7, 7, 7);
       gltf.scene.position.set(0, -4, 0);
 
-      gsap.to(gltf.scene.rotation, {
-        duration: 15,
-        y: Math.PI * 1,
-        repeat: -1,
-        yoyo: true,
-        ease: "linear",
-      });
-
-      let tl = gsap.timeline();
-
-      tl.to(
-        gltf.scene.position,
-        {
-          y: -4.5,
-          x: -6,
-          z: 10,
-          ease: "easeIn",
-          duration: 5,
+      function setupScrollAnimation() {
+        let tl = gsap.timeline({
           scrollTrigger: {
             trigger: ".register-form",
-            scrub: 1,
             start: "top bottom",
-            end: "top top",
+            endTrigger: ".img",
+            end: "bottom bottom",
+            scrub: 1,
             markers: true,
+            invalidateOnRefresh: true,
           },
-        },
-        0
-      );
+        });
+
+        tl.to(gltf.scene.position, { x: -5, y: -5, z: 10 }, 0)
+          .to(gltf.scene.position, { x: 0, y: -3, z: 8 }, 1)
+          .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 1)
+          .to(gltf.scene.position, { x: 4, y: -5, z: 10 }, 2)
+          .to(gltf.scene.rotation, { x: Math.PI * 0 }, 2);
+
+        gsap.to(gltf.scene.rotation, {
+          duration: 15,
+          y: Math.PI * 1,
+          repeat: -1,
+          yoyo: true,
+          ease: "linear",
+          start: "top top",
+          end: "+=100",
+        });
+      }
+
+      function setupScrollAnimationMobile() {
+        let tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".register-form",
+            start: "top bottom",
+            endTrigger: ".img",
+            end: "bottom bottom",
+            scrub: 1,
+            markers: true,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        tl.to(gltf.scene.position, { x: -3.5, y: -2.5, z: 5 }, 0)
+          .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 0)
+          .to(gltf.scene.rotation, { z: Math.PI * 1.5 }, 0)
+          .to(gltf.scene.position, { x: 0, y: -4, z: 5 }, 1)
+          .to(gltf.scene.rotation, { z: 0 }, 1)
+          .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 1)
+          .to(gltf.scene.position, { x: 0, y: -5, z: 5 }, 2)
+          .to(gltf.scene.rotation, { x: Math.PI * 0 }, 2)
+          .to(gltf.scene.rotation, { y: Math.PI * 0.35 }, 2);
+
+        // gsap.to(gltf.scene.rotation, {
+        //   duration: 15,
+        //   y: Math.PI * 1,
+        //   repeat: -1,
+        //   yoyo: true,
+        //   ease: "linear",
+        //   start: "top top",
+        //   end: "+=100",
+        // });
+      }
+
+      if (isMobile) {
+        setupScrollAnimationMobile();
+      } else {
+        setupScrollAnimation();
+      }
 
       scene.add(gltf.scene);
 
@@ -117,15 +159,17 @@ export default function Scene() {
       var circleGeometry = new THREE.CircleGeometry(6.5, 32);
       var circleMaterial = new THREE.MeshStandardMaterial({
         color: 0xfeaa29,
+        emissive: 0xfeaa29,
+        emissiveIntensity: 18.8,
       });
       var circle = new THREE.Mesh(circleGeometry, circleMaterial);
       circle.position.set(0, -6, 0);
       scene.add(circle);
 
-      tl.to(
+      gsap.to(
         circle.position,
         {
-          y: 50,
+          y: 30,
           x: 0,
           z: 0,
           ease: "easeIn",
@@ -141,6 +185,36 @@ export default function Scene() {
         0
       );
     });
+
+    var textureLoader = new THREE.TextureLoader();
+    var texture = textureLoader.load("assets/textures/img/bar.png");
+    console.log(texture);
+
+    var backgroundHeader = new THREE.Mesh(
+      new THREE.PlaneGeometry(60, 30),
+      new THREE.MeshBasicMaterial({})
+    );
+    backgroundHeader.material.map = texture;
+    scene.add(backgroundHeader);
+
+    gsap.to(backgroundHeader.position, {
+      y: 30,
+
+      scrollTrigger: {
+        trigger: ".register-maintext",
+        scrub: 1,
+        start: "top bottom",
+        end: "top top",
+      },
+    });
+
+    var background = new THREE.Mesh(
+      new THREE.PlaneGeometry(200, 200),
+      new THREE.MeshBasicMaterial({ color: 0x444147 })
+    );
+    background.position.set(0, 0, -10);
+    scene.add(background);
+
     /////////////////////////
     // SCENARIO
     /////////////////////////
@@ -160,22 +234,30 @@ export default function Scene() {
     // Adding our shaders
     composer.addPass(renderScene);
 
-    /////////////////////////
-    // PARTICLES
-    /////////////////////////
+    // Bloom
+    var bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      1.6,
+      0.3,
+      0.75
+    );
+    composer.addPass(bloomPass);
 
-    var axisHelper = new THREE.AxesHelper(5);
-    scene.add(axisHelper);
+    // Film Pass
+    var filmPass = new FilmPass(0.7, 0.025, 128, false);
+    composer.addPass(filmPass);
+
+    // composer.addPass(filmPass);
 
     /////////////////////
     // Lights
     /////////////////////
-    var pointLight = new THREE.DirectionalLight(0xfcba03, 10);
+    var pointLight = new THREE.DirectionalLight(0xfcba03, 15);
     pointLight.position.set(-10, 0, 20);
     pointLight.castShadow = true;
     scene.add(pointLight);
 
-    var pointLight2 = new THREE.DirectionalLight(0x0022ff0, 10);
+    var pointLight2 = new THREE.DirectionalLight(0x0022ff0, 15);
     pointLight2.position.set(10, 0, 20);
     pointLight2.castShadow = true;
     scene.add(pointLight2);
@@ -208,6 +290,8 @@ export default function Scene() {
       renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
       camera.aspect = currentMount.clientWidth / currentMount.clientHeight;
       camera.updateProjectionMatrix();
+
+      composer.setSize(currentMount.clientWidth, currentMount.clientHeight);
     };
     window.addEventListener("resize", resize);
 
@@ -257,7 +341,7 @@ export default function Scene() {
         position: "fixed",
         top: 0,
         left: 0,
-        zIndex: 2,
+        zIndex: -2,
       }}
     ></div>
   );

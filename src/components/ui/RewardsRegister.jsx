@@ -1,58 +1,112 @@
-import React from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import styled from "styled-components";
 import RewardsRegisterForm from "../forms/RewardsRegisterForm";
+import gsap from "gsap";
 
 // Images
 import beerPhoto from "../../assets/images/cerveza.png";
 
 const Container = styled.div`
-  height: 100dvh;
+  min-height: 100vh;
+  width: 100%;
+
+  .form-container {
+  }
 
   .register-maintext {
-    margin-bottom: 50px;
+    width: 100%;
+    padding: 100px 0;
 
     h1 {
       font-weight: 700;
-      font-size: 1.5rem;
+      font-size: 3rem;
+      background: linear-gradient(
+        to right,
+        #c89663 40%,
+        #f3eee8 50%,
+        #c89663 60%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
   }
 
   .register-img {
-    width: 30%;
-    height: 512px;
+    height: 0;
+
+    @media (max-width: 1024px) {
+      height: 500px;
+    }
+
+    img {
+      width: 100%;
+    }
   }
 
   .register-img,
   .register-form {
-    margin: 0px 50px;
+    flex-direction: row;
+
+    @media (max-width: 1024px) {
+      flex-direction: column;
+    }
   }
 
   .register-form {
-    width: 30%;
+    width: 50%;
+
+    @media (max-width: 1024px) {
+      width: 100%;
+    }
 
     h1 {
       font-size: 1.5rem;
+      color: #f6f0da;
+      padding: 40px 0;
     }
 
     h2 {
       font-size: 1rem;
+      color: #f6f0da;
+      padding-bottom: 40px;
     }
   }
 `;
 
 export default function RewardsRegister() {
+  const app = useRef();
+
+  useLayoutEffect(() => {
+    var ctx = gsap.context(() => {
+      gsap.from(".enter-animation", {
+        scrollTrigger: {
+          trigger: ".register-maintext",
+          start: "top 80%",
+          end: "top 20%",
+          scrub: 1,
+        },
+        opacity: 0,
+        y: 300,
+        duration: 1,
+      });
+    }, app.current);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <Container className="container-fluid d-flex flex-column justify-content-center align-items-center">
-      <div className="register-maintext">
+    <Container
+      ref={app}
+      className="section container-fluid d-flex flex-column justify-content-center align-items-center"
+    >
+      <div className="register-maintext enter-animation">
         <h1 className="text-center font-weight-bold">
           ¡Registrate y gana productos completamente gratis!
         </h1>
       </div>
-      <div className="d-flex justify-content-center align-items-center">
-        <div className="register-img">
-          <img></img>
-        </div>
-        <div className="register-form">
+      <div className="register-form d-flex justify-content-between align-items-center enter-animation">
+        <div className="col-md-6 register-img"></div>
+        <div className="col-md-8 register-form ">
           <h1 className="text-center font-weight-bold">
             Con tan solo unos clicks
           </h1>
