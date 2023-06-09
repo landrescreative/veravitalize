@@ -170,13 +170,21 @@ export default function Scene() {
         // This traverse the model and adds a glow effect to the neon
         gltf.scene.traverse(function (child) {
           if (child.isMesh) {
+            child.material.emissiveIntensity = 6;
+          }
+        });
+
+        // This traverse a specific mesh and adds a glow effect to the neon
+        gltf.scene.traverse(function (child) {
+          if (child.name === "Amarillo") {
+            child.material.emissive = new THREE.Color(0xffd900);
             child.material.emissiveIntensity = 8;
           }
         });
 
         gltf.scene.rotation.z = Math.PI * 0.05;
         gltf.scene.scale.set(2, 2, 2);
-        gltf.scene.position.set(2, -14, 1);
+        gltf.scene.position.set(2, -14, 2);
         scene.add(gltf.scene);
 
         gsap.to(
@@ -210,11 +218,11 @@ export default function Scene() {
       new THREE.PlaneGeometry(10, 15),
       new THREE.MeshBasicMaterial({ map: missionImageTexture })
     );
-    missionImage.position.set(20, 5, 0);
+    missionImage.position.set(50, 5, 0);
     scene.add(missionImage);
 
-    gsap.from(missionImage.position, {
-      x: 50,
+    gsap.to(missionImage.position, {
+      x: 20,
       duration: 5,
       scrollTrigger: {
         trigger: ".mission-header",
@@ -232,11 +240,11 @@ export default function Scene() {
       new THREE.PlaneGeometry(10, 15),
       new THREE.MeshBasicMaterial({ map: missionImageTexture_2 })
     );
-    missionImage_2.position.set(-22, -5, 0);
+    missionImage_2.position.set(-50, -5, 0);
     scene.add(missionImage_2);
 
-    gsap.from(missionImage_2.position, {
-      x: -50,
+    gsap.to(missionImage_2.position, {
+      x: -22,
       duration: 5,
       scrollTrigger: {
         trigger: ".mission-header",
