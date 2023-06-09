@@ -46,7 +46,6 @@ export default function Mission() {
           start: "top 50%",
           end: "top 10%",
           scrub: 1,
-          markers: true,
         },
       });
     }, app.current);

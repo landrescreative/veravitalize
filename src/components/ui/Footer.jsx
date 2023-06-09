@@ -41,7 +41,7 @@ const Container = styled.div`
 
 export default function Footer() {
   return (
-    <Container className="container-fluid d-flex flex-column justify-content-center align-items-center">
+    <Container className="container-fluid d-flex flex-column justify-content-center align-items-center footer">
       <img src={logo}></img>
       <h1 className="text-center">
         Dándole a la cerveza la importancia que merece

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import styled from "styled-components";
+import gsap from "gsap";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -53,8 +54,30 @@ const Container = styled.div`
 `;
 
 export default function Services() {
+  const app = useRef();
+
+  useLayoutEffect(() => {
+    var ctx = gsap.context(() => {
+      gsap.from(".services-header", {
+        duration: 5,
+        opacity: 0,
+        scrollTrigger: {
+          trigger: ".mission-header ",
+          start: "top 50%",
+          end: "top 10%",
+          scrub: 1,
+        },
+      });
+    }, app.current);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <Container className="container-fluid d-flex flex-column justify-content-center align-items-center">
+    <Container
+      ref={app}
+      className="container-fluid d-flex flex-column justify-content-center align-items-center"
+    >
       <div className="services-header">
         <h1 className="text-center p-5">La cerveza en nuestra vida diaria</h1>
       </div>

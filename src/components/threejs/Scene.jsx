@@ -91,7 +91,6 @@ export default function Scene() {
             endTrigger: ".img",
             end: "bottom bottom",
             scrub: 1,
-            markers: true,
             invalidateOnRefresh: true,
           },
         });
@@ -116,10 +115,10 @@ export default function Scene() {
       function setupScrollAnimationMobile() {
         let tl = gsap.timeline({
           scrollTrigger: {
-            trigger: ".register-form",
+            trigger: ".register-maintext",
             start: "top bottom",
-            endTrigger: ".img",
-            end: "bottom bottom",
+            endTrigger: ".footer",
+            end: "top bottom",
             scrub: 1,
             markers: true,
             invalidateOnRefresh: true,
@@ -164,37 +163,96 @@ export default function Scene() {
       });
       var circle = new THREE.Mesh(circleGeometry, circleMaterial);
       circle.position.set(0, -6, 0);
-      scene.add(circle);
+      // scene.add(circle);
 
-      gsap.to(
-        circle.position,
-        {
-          y: 30,
-          x: 0,
-          z: 0,
-          ease: "easeIn",
-          duration: 5,
-          scrollTrigger: {
-            trigger: ".register-maintext",
-            scrub: 1,
-            start: "top bottom",
-            end: "top top",
-            markers: true,
+      // Load bar model neon
+      gltfLoader.load("assets/models/neon.gltf", function (gltf) {
+        // This traverse the model and adds a glow effect to the neon
+        gltf.scene.traverse(function (child) {
+          if (child.isMesh) {
+            child.material.emissiveIntensity = 8;
+          }
+        });
+
+        gltf.scene.rotation.z = Math.PI * 0.05;
+        gltf.scene.scale.set(2, 2, 2);
+        gltf.scene.position.set(2, -14, 1);
+        scene.add(gltf.scene);
+
+        gsap.to(
+          gltf.scene.position,
+          {
+            y: 30,
+            x: 0,
+            z: 0,
+            ease: "easeIn",
+            duration: 5,
+            scrollTrigger: {
+              trigger: ".register-maintext",
+              scrub: 1,
+              start: "top bottom",
+              end: "top top",
+              markers: true,
+            },
           },
-        },
-        0
-      );
+          0
+        );
+      });
     });
 
     var textureLoader = new THREE.TextureLoader();
-    var texture = textureLoader.load("assets/textures/img/bar.png");
-    console.log(texture);
 
+    // This adds images to the mission section
+    var missionImageTexture = textureLoader.load(
+      "assets/textures/img/beer_1.jpg"
+    );
+    var missionImage = new THREE.Mesh(
+      new THREE.PlaneGeometry(10, 15),
+      new THREE.MeshBasicMaterial({ map: missionImageTexture })
+    );
+    missionImage.position.set(20, 5, 0);
+    scene.add(missionImage);
+
+    gsap.from(missionImage.position, {
+      x: 50,
+      duration: 5,
+      scrollTrigger: {
+        trigger: ".mission-header",
+        scrub: 1,
+        top: "top top",
+        end: "bottom 20%",
+      },
+    });
+
+    // This adds images to the mission section
+    var missionImageTexture_2 = textureLoader.load(
+      "assets/textures/img/beer_2.jpg"
+    );
+    var missionImage_2 = new THREE.Mesh(
+      new THREE.PlaneGeometry(10, 15),
+      new THREE.MeshBasicMaterial({ map: missionImageTexture_2 })
+    );
+    missionImage_2.position.set(-22, -5, 0);
+    scene.add(missionImage_2);
+
+    gsap.from(missionImage_2.position, {
+      x: -50,
+      duration: 5,
+      scrollTrigger: {
+        trigger: ".mission-header",
+        scrub: 1,
+        top: "top top",
+        end: "bottom 20%",
+      },
+    });
+
+    // This add a background image to the header
+    var barBackgroundImage = textureLoader.load("assets/textures/img/bar.png");
     var backgroundHeader = new THREE.Mesh(
       new THREE.PlaneGeometry(60, 30),
       new THREE.MeshBasicMaterial({})
     );
-    backgroundHeader.material.map = texture;
+    backgroundHeader.material.map = barBackgroundImage;
     scene.add(backgroundHeader);
 
     gsap.to(backgroundHeader.position, {
@@ -208,6 +266,7 @@ export default function Scene() {
       },
     });
 
+    // This adds a background all the body
     var background = new THREE.Mesh(
       new THREE.PlaneGeometry(200, 200),
       new THREE.MeshBasicMaterial({ color: 0x444147 })
@@ -290,6 +349,8 @@ export default function Scene() {
       renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
       camera.aspect = currentMount.clientWidth / currentMount.clientHeight;
       camera.updateProjectionMatrix();
+
+      renderer.setPixelRatio(window.devicePixelRatio, 2);
 
       composer.setSize(currentMount.clientWidth, currentMount.clientHeight);
     };
