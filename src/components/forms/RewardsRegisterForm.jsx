@@ -52,33 +52,35 @@ export default function RewardsRegisterForm() {
     <Container>
       <div className="form-card d-flex flex-column ">
         <div className="form-card-header d-flex justify-content-center align-items-center">
-          <h1 className="form-h1">Registrate</h1>
+          <h1 className="form-h1">Register!</h1>
         </div>
         <form className="form-card-body">
           <div className="form-group">
-            <label for="exampleInputEmail1">Nombre</label>
+            <label for="exampleInputEmail1">Name</label>
             <input
               type="text"
               className="form-control"
               id="NameInput"
               aria-describedby="emailHelp"
-              placeholder="Ingresa tu nombre"
+              placeholder="Enter your name"
             ></input>
-            <label for="exampleInputEmail1">Correo</label>
+            <label for="exampleInputEmail1">E-mail</label>
             <input
               type="text"
               className="form-control"
               id="EmailInput"
               aria-describedby="emailHelp"
-              placeholder="Ingresa tu correo"
+              placeholder="
+Enter your email"
             ></input>
-            <label for="exampleInputEmail1">Mensaje</label>
+            <label for="exampleInputEmail1">Message</label>
             <input
               type="text"
               className="form-control"
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
-              placeholder="¿Por qué deberías participar con nosotros?"
+              placeholder="Why should you participate with us?
+"
             ></input>
             <button>Register</button>
           </div>

@@ -79,29 +79,28 @@ export default function Services() {
       className="container-fluid d-flex flex-column justify-content-center align-items-center"
     >
       <div className="services-header">
-        <h1 className="text-center p-5">La cerveza en nuestra vida diaria</h1>
+        <h1 className="text-center p-5">Beer in our daily life</h1>
       </div>
       <div className="contenedor">
         <div className="services-services row">
           <div className="col-md-5">
             <div className="services-card">
-              <h2>Agrega la cerveza a tu vida cotidiana</h2>
+              <h2>Add beer to your daily life</h2>
               <p>
-                Conoce recetas únicas para implementar la cerveza a tu vida
-                diaria y disfruta de sus beneficios de manera controlada y
-                saludable.
+                Get to know unique recipes to implement beer into your daily
+                life and enjoy its benefits in a controlled and healthy way.
               </p>
-              <button>Recetas</button>
+              <button>RECIPES</button>
             </div>
 
             <div className="services-card">
-              <h2>Disfruta su sabor de manera correcta</h2>
+              <h2>Enjoy its flavor correctly</h2>
               <p>
-                Revisa nuestra colección de cocteles preferidos por nosotros
-                para darle un estilo y sabor único a la cerveza de manera
-                accesible para todos.
+                Check out our collection of our favorite cocktails to give a
+                unique style and flavor to beer in a way that is accessible to
+                everyone.
               </p>
-              <button>Cocteles</button>
+              <button>COCKTAILS</button>
             </div>
           </div>
           <div className="col-md-2"></div>

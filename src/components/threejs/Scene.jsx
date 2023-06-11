@@ -128,18 +128,19 @@ export default function Scene() {
               endTrigger: ".footer",
               end: "top bottom",
               scrub: 1,
-              markers: true,
+              markers: false,
               invalidateOnRefresh: true,
             },
           });
 
-          tl.to(gltf.scene.position, { x: -3.5, y: -2.5, z: 5 }, 0)
+          tl.to(gltf.scene.position, { x: -9, y: -2.5, z: 7 }, 0)
             .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 0)
             .to(gltf.scene.rotation, { z: Math.PI * 1.5 }, 0)
-            .to(gltf.scene.position, { x: 0, y: -4, z: 5 }, 1)
-            .to(gltf.scene.rotation, { z: 0 }, 1)
+            .to(gltf.scene.position, { x: 0, y: -4, z: 15 }, 1)
+            .to(gltf.scene.rotation, { z: Math.PI * 1 }, 1)
             .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 1)
-            .to(gltf.scene.position, { x: 0, y: -5, z: 5 }, 2)
+            .to(gltf.scene.position, { x: 0, y: -15, z: 5 }, 2)
+            .to(gltf.scene.rotation, { z: Math.PI * 0 }, 2)
             .to(gltf.scene.rotation, { x: Math.PI * 0 }, 2)
             .to(gltf.scene.rotation, { y: Math.PI * 0.35 }, 2);
 
@@ -197,7 +198,7 @@ export default function Scene() {
                 scrub: 1,
                 start: "top bottom",
                 end: "top top",
-                markers: true,
+                markers: false,
               },
             },
             0

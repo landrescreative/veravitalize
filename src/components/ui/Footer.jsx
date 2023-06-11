@@ -43,9 +43,7 @@ export default function Footer() {
   return (
     <Container className="container-fluid d-flex flex-column justify-content-center align-items-center footer">
       <img src={logo}></img>
-      <h1 className="text-center">
-        Dándole a la cerveza la importancia que merece
-      </h1>
+      <h1 className="text-center">Giving beer the importance it deserves</h1>
       <div className="footer-social-links">
         <img src={instagram}></img>
         <img src={facebook}></img>
