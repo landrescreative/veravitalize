@@ -85,127 +85,124 @@ export default function Scene() {
     const isMobile = window.innerWidth < 1024;
 
     // Load 3D model
-    gltfLoader.load(
-      "assets/models/beer_bottle/beer_bottle.gltf",
-      function (gltf) {
-        gltf.scene.scale.set(170, 170, 170);
-        gltf.scene.position.set(0, -15, 0);
+    gltfLoader.load("assets/models/beer_can.glb", function (gltf) {
+      gltf.scene.scale.set(10, 10, 10);
+      gltf.scene.position.set(0, -8, 0);
 
-        function setupScrollAnimation() {
-          let tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: ".register-form",
-              start: "top bottom",
-              endTrigger: ".img",
-              end: "bottom bottom",
-              scrub: 1,
-              invalidateOnRefresh: true,
-            },
-          });
+      function setupScrollAnimation() {
+        let tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".register-form",
+            start: "top bottom",
+            endTrigger: ".img",
+            end: "bottom bottom",
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        });
 
-          tl.to(gltf.scene.position, { x: -6, y: -13, z: 9 }, 0)
-            .to(gltf.scene.position, { x: -10, y: -2, z: 12 }, 1)
-            .to(gltf.scene.rotation, { z: Math.PI * 1.5 }, 1)
-            .to(gltf.scene.position, { x: 5, y: -12, z: 7 }, 2)
-            .to(gltf.scene.rotation, { z: Math.PI * 2 }, 2);
+        tl.to(gltf.scene.position, { x: -7, y: -8, z: 7 }, 0)
+          .to(gltf.scene.position, { x: 0, y: -4, z: 6 }, 1)
+          .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 1)
+          .to(gltf.scene.position, { x: 5, y: -8, z: 7 }, 2)
+          .to(gltf.scene.rotation, { x: Math.PI * 0 }, 2);
 
-          // gsap.to(gltf.scene.rotation, {
-          //   duration: 15,
-          //   y: Math.PI * 1,
-          //   repeat: -1,
-          //   yoyo: true,
-          //   ease: "linear",
-          //   start: "top top",
-          //   end: "+=100",
-          // });
-        }
+        // gsap.to(gltf.scene.rotation, {
+        //   duration: 15,
+        //   y: Math.PI * 1,
+        //   repeat: -1,
+        //   yoyo: true,
+        //   ease: "linear",
+        //   start: "top top",
+        //   end: "+=100",
+        // });
+      }
 
-        function setupScrollAnimationMobile() {
-          let tl = gsap.timeline({
+      function setupScrollAnimationMobile() {
+        let tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".register-maintext",
+            start: "top bottom",
+            endTrigger: ".footer",
+            end: "top bottom",
+            scrub: 1,
+            markers: false,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        tl.to(gltf.scene.position, { x: -9, y: -2.5, z: 7 }, 0)
+          .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 0)
+          .to(gltf.scene.rotation, { z: Math.PI * 1.5 }, 0)
+          .to(gltf.scene.position, { x: 0, y: -4, z: 15 }, 1)
+          .to(gltf.scene.rotation, { z: Math.PI * 1 }, 1)
+          .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 1)
+          .to(gltf.scene.position, { x: 0, y: -15, z: 5 }, 2)
+          .to(gltf.scene.rotation, { z: Math.PI * 0 }, 2)
+          .to(gltf.scene.rotation, { x: Math.PI * 0 }, 2)
+          .to(gltf.scene.rotation, { y: Math.PI * 0.35 }, 2);
+
+        // gsap.to(gltf.scene.rotation, {
+        //   duration: 15,
+        //   y: Math.PI * 1,
+        //   repeat: -1,
+        //   yoyo: true,
+        //   ease: "linear",
+        //   start: "top top",
+        //   end: "+=100",
+        // });
+      }
+
+      if (isMobile) {
+        setupScrollAnimationMobile();
+      } else {
+        setupScrollAnimation();
+      }
+
+      scene.add(gltf.scene);
+
+      // Load bar model neon
+      gltfLoader.load("assets/models/neon.gltf", function (gltf) {
+        // This traverse the model and adds a glow effect to the neon
+        gltf.scene.traverse(function (child) {
+          if (child.isMesh) {
+            child.material.emissiveIntensity = 6;
+          }
+        });
+
+        // This traverse a specific mesh and adds a glow effect to the neon
+        gltf.scene.traverse(function (child) {
+          if (child.name === "Amarillo") {
+            child.material.emissive = new THREE.Color(0xffd900);
+            child.material.emissiveIntensity = 8;
+          }
+        });
+
+        gltf.scene.rotation.z = Math.PI * 0.05;
+        gltf.scene.scale.set(2, 2, 2);
+        gltf.scene.position.set(2, -14, 2);
+        // scene.add(gltf.scene);
+
+        gsap.to(
+          gltf.scene.position,
+          {
+            y: 30,
+            x: 0,
+            z: 0,
+            ease: "easeIn",
+            duration: 5,
             scrollTrigger: {
               trigger: ".register-maintext",
-              start: "top bottom",
-              endTrigger: ".footer",
-              end: "top bottom",
               scrub: 1,
+              start: "top bottom",
+              end: "top top",
               markers: false,
-              invalidateOnRefresh: true,
             },
-          });
-
-          tl.to(gltf.scene.position, { x: -9, y: -2.5, z: 7 }, 0)
-            .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 0)
-            .to(gltf.scene.rotation, { z: Math.PI * 1.5 }, 0)
-            .to(gltf.scene.position, { x: 0, y: -4, z: 15 }, 1)
-            .to(gltf.scene.rotation, { z: Math.PI * 1 }, 1)
-            .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 1)
-            .to(gltf.scene.position, { x: 0, y: -15, z: 5 }, 2)
-            .to(gltf.scene.rotation, { z: Math.PI * 0 }, 2)
-            .to(gltf.scene.rotation, { x: Math.PI * 0 }, 2)
-            .to(gltf.scene.rotation, { y: Math.PI * 0.35 }, 2);
-
-          // gsap.to(gltf.scene.rotation, {
-          //   duration: 15,
-          //   y: Math.PI * 1,
-          //   repeat: -1,
-          //   yoyo: true,
-          //   ease: "linear",
-          //   start: "top top",
-          //   end: "+=100",
-          // });
-        }
-
-        if (isMobile) {
-          setupScrollAnimationMobile();
-        } else {
-          setupScrollAnimation();
-        }
-
-        scene.add(gltf.scene);
-
-        // Load bar model neon
-        gltfLoader.load("assets/models/neon.gltf", function (gltf) {
-          // This traverse the model and adds a glow effect to the neon
-          gltf.scene.traverse(function (child) {
-            if (child.isMesh) {
-              child.material.emissiveIntensity = 6;
-            }
-          });
-
-          // This traverse a specific mesh and adds a glow effect to the neon
-          gltf.scene.traverse(function (child) {
-            if (child.name === "Amarillo") {
-              child.material.emissive = new THREE.Color(0xffd900);
-              child.material.emissiveIntensity = 8;
-            }
-          });
-
-          gltf.scene.rotation.z = Math.PI * 0.05;
-          gltf.scene.scale.set(2, 2, 2);
-          gltf.scene.position.set(2, -14, 2);
-          // scene.add(gltf.scene);
-
-          gsap.to(
-            gltf.scene.position,
-            {
-              y: 30,
-              x: 0,
-              z: 0,
-              ease: "easeIn",
-              duration: 5,
-              scrollTrigger: {
-                trigger: ".register-maintext",
-                scrub: 1,
-                start: "top bottom",
-                end: "top top",
-                markers: false,
-              },
-            },
-            0
-          );
-        });
-      }
-    );
+          },
+          0
+        );
+      });
+    });
 
     var textureLoader = new THREE.TextureLoader();
 
