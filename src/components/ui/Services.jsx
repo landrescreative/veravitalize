@@ -79,28 +79,28 @@ export default function Services() {
       className="container-fluid d-flex flex-column justify-content-center align-items-center"
     >
       <div className="services-header">
-        <h1 className="text-center p-5">Beer in our daily life</h1>
+        <h1 className="text-center p-5">Enhance results</h1>
       </div>
       <div className="contenedor">
         <div className="services-services row">
           <div className="col-md-5">
             <div className="services-card">
-              <h2>Add beer to your daily life</h2>
+              <h2>Combine Our Products with Other Skincare Essentials</h2>
               <p>
-                Get to know unique recipes to implement beer into your daily
-                life and enjoy its benefits in a controlled and healthy way.
+                From serums and masks to cleansers and exfoliators, our skincare
+                product line seamlessly integrates with a variety of treatments
+                to provide your skin with comprehensive and effective care.
               </p>
-              <button>RECIPES</button>
+              <button>Shop</button>
             </div>
 
             <div className="services-card">
-              <h2>Enjoy its flavor correctly</h2>
+              <h2>For Every Skin Type: Explore Our Specialized Line</h2>
               <p>
-                Check out our collection of our favorite cocktails to give a
-                unique style and flavor to beer in a way that is accessible to
-                everyone.
+                Whether you have dry, combination, sensitive, or acne-prone
+                skin, we have the perfect solution for you.
               </p>
-              <button>COCKTAILS</button>
+              <button>Tell us our needs</button>
             </div>
           </div>
           <div className="col-md-2"></div>

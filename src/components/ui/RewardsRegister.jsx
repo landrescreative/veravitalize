@@ -101,7 +101,7 @@ export default function RewardsRegister() {
     >
       <div className="register-maintext enter-animation">
         <h1 className="text-center font-weight-bold">
-          Register and win products completely free!
+          Register and participate in our promotions
         </h1>
       </div>
       <div className="register-form d-flex justify-content-between align-items-center enter-animation">

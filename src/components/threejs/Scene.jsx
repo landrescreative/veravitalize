@@ -36,9 +36,7 @@ export default function Scene() {
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
     });
-    renderer.setClearColor(0x1f1e23, 1);
-    renderer.toneMapping = THREE.ReinhardToneMapping;
-    renderer.toneMappingExposure = 0.4;
+    renderer.setClearColor(0xffffff, 1);
     renderer.physicallyCorrectLights = true;
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
@@ -67,6 +65,7 @@ export default function Scene() {
     const hdriLoader = new RGBELoader();
     hdriLoader.load("assets/hdr/studio.hdr", function (texture) {
       texture.mapping = THREE.EquirectangularReflectionMapping;
+      scene.environmentIntensity = 1;
       scene.environment = texture;
     });
 
@@ -251,7 +250,7 @@ export default function Scene() {
     });
 
     // This add a background image to the header
-    var barBackgroundImage = textureLoader.load("assets/textures/img/bar.png");
+    var barBackgroundImage = textureLoader.load("assets/textures/img/bgc.jpg");
     var backgroundHeader = new THREE.Mesh(
       new THREE.PlaneGeometry(60, 30),
       new THREE.MeshBasicMaterial({})
@@ -273,7 +272,7 @@ export default function Scene() {
     // This adds a background all the body
     var background = new THREE.Mesh(
       new THREE.PlaneGeometry(200, 200),
-      new THREE.MeshBasicMaterial({ color: 0x444147 })
+      new THREE.MeshBasicMaterial({ color: 0xffffff })
     );
     background.position.set(0, 0, -10);
     scene.add(background);
@@ -300,27 +299,23 @@ export default function Scene() {
     // Bloom
     var bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      1.6,
+      0.2,
       0.3,
       0.75
     );
     composer.addPass(bloomPass);
-
-    // Film Pass
-    var filmPass = new FilmPass(0.7, 0.025, 128, false);
-    composer.addPass(filmPass);
 
     // composer.addPass(filmPass);
 
     /////////////////////
     // Lights
     /////////////////////
-    var pointLight = new THREE.DirectionalLight(0xfcba03, 15);
+    var pointLight = new THREE.DirectionalLight(0xfcba03, 1);
     pointLight.position.set(-10, 0, 20);
     pointLight.castShadow = true;
     scene.add(pointLight);
 
-    var pointLight2 = new THREE.DirectionalLight(0x0022ff0, 15);
+    var pointLight2 = new THREE.DirectionalLight(0x0022ff0, 1);
     pointLight2.position.set(10, 0, 20);
     pointLight2.castShadow = true;
     scene.add(pointLight2);

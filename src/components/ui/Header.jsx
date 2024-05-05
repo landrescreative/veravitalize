@@ -24,32 +24,16 @@ const Container = styled.div`
     color: #feaa29;
     font-family: "Bebas Neue";
     h1 {
-      background: linear-gradient(
-        to right,
-        #c89663 40%,
-        #f3eee8 50%,
-        #c89663 60%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #9cbc97;
       line-height: 0.9;
       font-weight: 700;
       font-size: 6.5rem;
     }
 
     h2 {
-      background: linear-gradient(
-        to right,
-        #c89663 40%,
-        #f3eee8 50%,
-        #c89663 60%
-      );
-      line-height: 0.9;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #9cbc97;
       font-weight: 400;
       font-size: 3rem;
-      color: #f6f0da;
     }
 
     @media (max-width: 1024px) {
@@ -83,18 +67,11 @@ const Container = styled.div`
     h1 {
       font-size: 1.5rem;
       font-weight: 500;
-      color: #feaa29;
-      background: linear-gradient(
-        to right,
-        #c89663 20%,
-        #f3eee8 50%,
-        #c89663 80%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #9cbc97;
     }
 
     h2 {
+      color: #000000;
       font-size: 1rem;
     }
 
@@ -108,8 +85,8 @@ export default function Header() {
   return (
     <Container className="container-fluid d-flex flex-column justify-content-center align-items-center">
       <div className="header_main_texts">
-        <h2>Welcome to</h2>
-        <h1>The art of beer</h1>
+        <h2>Discover Your Best Skin</h2>
+        <h1>Naturally</h1>
       </div>
       <div className="header_spacer_mobile"></div>
       <div className="header_about_texts row d-flex justify-content-between align-items-center">
@@ -117,41 +94,49 @@ export default function Header() {
           <div className="header_about_texts_spans">
             <h1>
               <img src={drinkSVG}></img>
-              Why is beer history?
+              Refresh Your Skin with Our Pure Aloe Vera
             </h1>
             <h2>
-              This drink can be considered one of the oldest drinks in the
-              world.
+              Our unique formula, based on Pure Aloe Vera, instantly refreshes
+              and revitalizes your skin. Aloe Vera is known for its hydrating
+              and soothing properties, leaving your skin soft and radiant.
             </h2>
           </div>
           <div className="header_about_texts_spans">
             <h1>
               <img src={healthSVG}></img>
-              Unique benefits for your health
+              Take Care of Your Skin with Nature's Best
             </h1>
             <h2>
-              It has many benefits for your health as long as it is a quality
-              beer like ours.
+              Discover the benefits of Aloe Vera in our skincare line. Aloe Vera
+              is rich in antioxidants and vitamins, helping to rejuvenate the
+              skin and combat signs of aging naturally.
             </h2>
           </div>
         </div>
         <div className="header_about_texts_right d-flex col-md-4 flex-column justify-content-center align-items-center">
           <div className="header_about_texts_spans">
             <h1>
-              <img src={beerSVG}></img>Useful for our day to day
+              <img src={beerSVG}></img>
+              Give Your Skin the Treatment It Deserves
             </h1>
             <h2>
-              Find a way to use beer in your daily life with incredible recipes
-              available to everyone.
+              Our skincare products are formulated with high-quality Aloe Vera,
+              known for its regenerative properties and ability to soothe
+              sensitive skin. Give your skin the care it deserves and enjoy
+              healthy, radiant skin.
             </h2>
           </div>
           <div className="header_about_texts_spans">
             <h1>
-              <img src={rewardSVG}></img>Win prizes with us
+              <img src={rewardSVG}></img>Experience Natural Nourishment for Your
+              Skin
             </h1>
             <h2>
-              You can win products completely free with a couple of clicks,
-              click here to find out more.
+              Nourish your skin with the benefits of Aloe Vera. Our product line
+              uses natural ingredients to provide your skin with the hydration
+              and care it needs. Experience the difference nature's power can
+              make in your skincare routine.
             </h2>
           </div>
         </div>

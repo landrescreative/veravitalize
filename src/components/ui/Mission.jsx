@@ -59,10 +59,9 @@ export default function Mission() {
       className="container-fluid d-flex justify-content-center"
     >
       <div className="mission-header d-flex flex-column justify-content-center align-items-center enter-animation">
-        <h1 className="mission-h1">Our mission</h1>
+        <h1 className="mission-h1">Try it</h1>
         <h2 className="mission-h2">
-          Our mission is to show that those people who enjoy beer can add it to
-          their lives in a much healthier way.
+          Experience the Freshness of Nature on Your Skin
         </h2>
       </div>
       <div className="mission-spacer"></div>
