@@ -36,7 +36,6 @@ export default function Scene() {
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
     });
-    renderer.setClearColor(0xffffff, 1);
     renderer.physicallyCorrectLights = true;
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
@@ -83,10 +82,14 @@ export default function Scene() {
     // Variable to see if the user is on mobile based on viewport width
     const isMobile = window.innerWidth < 1024;
 
+    var crema;
+
     // Load 3D model
-    gltfLoader.load("assets/models/beer_can.glb", function (gltf) {
+    gltfLoader.load("assets/models/skincare.glb", function (gltf) {
       gltf.scene.scale.set(10, 10, 10);
-      gltf.scene.position.set(0, -8, 0);
+      gltf.scene.rotation.set(0, Math.PI * 0.5, 0);
+      gltf.scene.position.set(0, -4, 0);
+      crema = gltf.scene;
 
       function setupScrollAnimation() {
         let tl = gsap.timeline({
@@ -100,10 +103,10 @@ export default function Scene() {
           },
         });
 
-        tl.to(gltf.scene.position, { x: -7, y: -8, z: 7 }, 0)
+        tl.to(gltf.scene.position, { x: -7, y: -2, z: 4 }, 0)
           .to(gltf.scene.position, { x: 0, y: -4, z: 6 }, 1)
           .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 1)
-          .to(gltf.scene.position, { x: 5, y: -8, z: 7 }, 2)
+          .to(gltf.scene.position, { x: 5, y: -2, z: 2 }, 2)
           .to(gltf.scene.rotation, { x: Math.PI * 0 }, 2);
 
         // gsap.to(gltf.scene.rotation, {
@@ -256,7 +259,7 @@ export default function Scene() {
       new THREE.MeshBasicMaterial({})
     );
     backgroundHeader.material.map = barBackgroundImage;
-    scene.add(backgroundHeader);
+    // scene.add(backgroundHeader);
 
     gsap.to(backgroundHeader.position, {
       y: 30,
@@ -272,10 +275,17 @@ export default function Scene() {
     // This adds a background all the body
     var background = new THREE.Mesh(
       new THREE.PlaneGeometry(200, 200),
-      new THREE.MeshBasicMaterial({ color: 0xffffff })
+      new THREE.MeshBasicMaterial({ color: 0xfafffa })
     );
     background.position.set(0, 0, -10);
     scene.add(background);
+
+    // Geometry that follows mouse
+    var geometry = new THREE.SphereGeometry(0.8, 16, 16);
+    var material = new THREE.MeshBasicMaterial({ color: 0x7bb661 });
+    var sphere = new THREE.Mesh(geometry, material);
+    sphere.position.set(0, 0, 10);
+    scene.add(sphere);
 
     /////////////////////////
     // SCENARIO
@@ -299,26 +309,28 @@ export default function Scene() {
     // Bloom
     var bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.2,
+      0.1,
       0.3,
       0.75
     );
     composer.addPass(bloomPass);
+
+    // Film
+    var filmPass = new FilmPass(
+      0.35, // noise intensity
+      0.025, // scanline intensity
+      648, // scanline count
+      false // grayscale
+    );
+    filmPass.renderToScreen = true;
 
     // composer.addPass(filmPass);
 
     /////////////////////
     // Lights
     /////////////////////
-    var pointLight = new THREE.DirectionalLight(0xfcba03, 1);
-    pointLight.position.set(-10, 0, 20);
-    pointLight.castShadow = true;
-    scene.add(pointLight);
-
-    var pointLight2 = new THREE.DirectionalLight(0x0022ff0, 1);
-    pointLight2.position.set(10, 0, 20);
-    pointLight2.castShadow = true;
-    scene.add(pointLight2);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+    scene.add(ambientLight);
     /////////////////////
     // Raycaster
     /////////////////////
@@ -327,16 +339,13 @@ export default function Scene() {
     function onPointerMove(event) {
       pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
       pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-      var vector = new THREE.Vector3(pointer.x, pointer.y, 1);
-      vector.unproject(camera);
-      var dir = vector.sub(camera.position).normalize();
-      var distance = -camera.position.z / dir.z;
-      var pos = camera.position.clone().add(dir.multiplyScalar(distance));
     }
 
     window.addEventListener("pointermove", onPointerMove);
 
+    // Raycaster that detects mouse position from camera
+    // and returns the object that is being hovered
+    const raycaster = new THREE.Raycaster();
     /////////////////////////
     ///////// Scroll
     /////////////////////////
@@ -369,6 +378,30 @@ export default function Scene() {
       const deltaFilm = clock.getDelta();
       const delta = elapsedTime - previousTime;
       previousTime = elapsedTime;
+      // Parallax effect
+      camera.position.x = pointer.x * 0.5;
+      camera.position.y = pointer.y * 0.5;
+
+      // Makes geometry follows mouse
+      sphere.position.x = pointer.x * 20;
+      sphere.position.y = pointer.y * 17;
+
+      // Raycaster
+      raycaster.setFromCamera(pointer, camera);
+
+      if (crema) {
+        const hits = raycaster.intersectObjects([crema], true);
+
+        // Mouse leave effect
+        if (hits.length > 0) {
+          gsap.to(crema.scale, {
+            onUpdate: () => {
+              crema.rotation.y += 0.0005;
+            },
+          });
+        }
+      }
+
       // Test
 
       stats.begin();

@@ -13,18 +13,10 @@ const Container = styled.div`
   .mission-header {
     padding: 5% 5%;
     height: 40%;
-    color: #f6f0da;
+    color: #393d3d;
 
     h1 {
-      color: #feaa29;
-      background: linear-gradient(
-        to right,
-        #c89663 20%,
-        #f3eee8 50%,
-        #c89663 80%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #7bb661;
     }
   }
 

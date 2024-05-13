@@ -2,9 +2,11 @@ import React from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
-  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.8);
+  box-shadow: 0px 10px 10px 5px rgba(0, 0, 0, 0.2);
   padding: 15px 0px;
   background-color: #f2f2f2;
   color: #f6f0da;
@@ -12,8 +14,9 @@ const Container = styled.div`
 
   .form-card-header {
     .form-h1 {
+      max-height: 30px;
       color: #1f1e23;
-      line-height: 1.2;
+      line-height: 1;
     }
   }
 
@@ -30,7 +33,7 @@ const Container = styled.div`
     }
 
     input {
-      border: 2px solid #1f1e23;
+      border: 2px solid #9cbc97;
       font-size: 1.2rem;
 
       &:nth-child(6) {
@@ -41,7 +44,9 @@ const Container = styled.div`
     button {
       margin-top: 20px;
       padding: 10px 20px;
-      background-color: #feaa29;
+      background-color: #7bb661;
+      border-radius: 12px;
+      box-shadow: 0px 5px 5px 2px rgba(0, 0, 0, 0.2);
       border: none;
     }
   }

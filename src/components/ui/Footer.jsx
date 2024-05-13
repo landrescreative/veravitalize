@@ -9,8 +9,8 @@ import twitter from "../../assets/svg/social-media/icons8-twitter.svg";
 import whatsapp from "../../assets/svg/social-media/icons8-whatsapp.svg";
 
 const Container = styled.div`
-  min-height: 30vh;
-  background-color: #111013;
+  min-height: 40vh;
+  background-color: #393d3d;
   backdrop-filter: blur(18px) saturate(100%);
   -webkit-backdrop-filter: blur(18px) saturate(100%);
   background-color: rgba(17, 16, 19, 0.85);
@@ -18,12 +18,13 @@ const Container = styled.div`
 
   img {
     width: 150px;
+    filter: invert(0%) sepia(100%) saturate(0%) hue-rotate(0deg);
   }
 
   h1 {
     padding: 20px 20px;
     font-size: 1.5rem;
-    color: #d8d3bf;
+    color: #f2f2f2;
   }
 
   .footer-social-links {

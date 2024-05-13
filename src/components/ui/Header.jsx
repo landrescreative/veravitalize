@@ -11,6 +11,7 @@ import BarBackground from "../../assets/images/bar.png";
 
 const Container = styled.div`
   min-height: 100vh;
+  margin-top: 40px;
   background-size: contain;
 
   @media (max-width: 1024px) {
@@ -21,17 +22,17 @@ const Container = styled.div`
     width: 90%;
     text-align: center;
     padding-bottom: 15dvh;
-    color: #feaa29;
+    color: #393d3d;
     font-family: "Bebas Neue";
     h1 {
-      color: #9cbc97;
+      color: #393d3d;
       line-height: 0.9;
       font-weight: 700;
       font-size: 6.5rem;
     }
 
     h2 {
-      color: #9cbc97;
+      color: #393d3d;
       font-weight: 400;
       font-size: 3rem;
     }
@@ -52,7 +53,7 @@ const Container = styled.div`
 
   .header_about_texts {
     width: 90%;
-    color: #f6f0da;
+    color: #393d3d;
   }
 
   .header_about_texts_spans {
@@ -60,6 +61,8 @@ const Container = styled.div`
     margin: 20px 0px;
 
     img {
+      filter: invert(100%) sepia(90%) saturate(0%) hue-rotate(346deg)
+        brightness(89%) contrast(111%);
       width: 50px;
       margin-right: 5px;
     }
@@ -67,11 +70,9 @@ const Container = styled.div`
     h1 {
       font-size: 1.5rem;
       font-weight: 500;
-      color: #9cbc97;
     }
 
     h2 {
-      color: #000000;
       font-size: 1rem;
     }
 

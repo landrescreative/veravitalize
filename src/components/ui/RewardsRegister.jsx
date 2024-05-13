@@ -15,19 +15,12 @@ const Container = styled.div`
 
   .register-maintext {
     width: 100%;
-    padding: 100px 0;
+    padding: 50px 0;
 
     h1 {
       font-weight: 700;
       font-size: 3rem;
-      background: linear-gradient(
-        to right,
-        #c89663 40%,
-        #f3eee8 50%,
-        #c89663 60%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #7bb661;
     }
   }
 
@@ -61,13 +54,13 @@ const Container = styled.div`
 
     h1 {
       font-size: 1.5rem;
-      color: #f6f0da;
+      color: #393d3d;
       padding: 40px 0;
     }
 
     h2 {
       font-size: 1rem;
-      color: #f6f0da;
+      color: #393d3d;
       padding-bottom: 40px;
     }
   }

@@ -16,25 +16,20 @@ const Container = styled.div`
 
   .services-header {
     height: 20%;
-    background: linear-gradient(
-      to right,
-      #c89663 20%,
-      #f3eee8 50%,
-      #c89663 80%
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #7bb661;
   }
 
   .services-services {
     .services-card {
       margin: 10px 10px;
+      color: #393d3d;
 
       button {
-        margin-top: 20px;
+        margin-top: 10px;
         padding: 10px 20px;
-        background-color: #feaa29;
+        background-color: #7bb661;
         border: none;
+        border-radius: 12px;
       }
 
       @media (max-width: 1024px) {

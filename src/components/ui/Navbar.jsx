@@ -15,9 +15,16 @@ const Navbar = () => {
     setActive(!active);
   };
 
+  let classes = "";
+  if (active) {
+    classes += "hide";
+  }
+
   return (
     <Container className="container-fluid row align-items-center">
-      <img src={Logo} className="col-md-1"></img>
+      <div className="brand-name">
+        <span>NATURE</span>
+      </div>
       <Links
         className={
           "col-md-9 d-flex align-items-center " + (active ? "active" : "")
@@ -25,11 +32,14 @@ const Navbar = () => {
       >
         <span>HOME</span>
         <span>ABOUT US</span>
-        <span>RECIPES</span>
+        <span>PRODUCTS</span>
         <span>CONTACT</span>
       </Links>
       <button className="nav-icon" onClick={handleToggle}>
-        <img src={NavbarIcon}></img>
+        <img
+          src={NavbarIcon}
+          style={{ display: active ? "none" : "block" }}
+        ></img>
         <span className={active ? "active" : ""}>X</span>
       </button>
     </Container>
@@ -59,25 +69,40 @@ const rotate = keyframes`
 `;
 
 const Container = styled.div`
+  position: fixed;
+  top: 0;
   height: 9svh;
   padding: 0;
   margin: 0;
   width: 100%;
   z-index: 10;
-  backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px);
   justify-content: center;
   -webkit-backdrop-filter: blur(16px) saturate(180%);
 
   @media (max-width: 1024px) {
     justify-content: space-around;
+    position: relative;
   }
 
-  img {
-    width: 200px;
-    fill: #000000;
+  @media (max-width: 1024px) {
+    width: 100px;
+  }
+
+  // Brand name
+  .brand-name {
+    font-size: 22px;
+    font-weight: 600;
+    font-family: "Montserrat", sans-serif;
+    color: black;
+    letter-spacing: 1px;
+
+    span {
+      color: #393d3d;
+    }
 
     @media (max-width: 1024px) {
-      width: 100px;
+      display: none;
     }
   }
 
@@ -97,6 +122,7 @@ const Container = styled.div`
       z-index: 10;
       color: white;
       font-size: 30px;
+      border: none;
 
       &.active {
         display: block;
@@ -121,6 +147,7 @@ const Container = styled.div`
 
     // Dots icon
     img {
+      filter: invert(100%) sepia(90%) saturate(0%) hue-rotate(346deg);
       width: 50px;
       height: 50px;
     }
@@ -136,6 +163,11 @@ const Links = styled.div`
   @media (min-width: 1024px) {
     position: initial;
     justify-content: flex-end;
+  }
+
+  // Hide button on click
+  &.hide {
+    display: none;
   }
 
   // Burger menu
@@ -166,7 +198,7 @@ const Links = styled.div`
     font-family: "Montserrat", sans-serif;
     font-weight: 700;
     font-size: 14px;
-    color: white;
+    color: black;
     letter-spacing: 1px;
 
     &:hover {
