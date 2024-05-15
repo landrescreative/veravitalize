@@ -6,11 +6,13 @@ import RewardsRegister from "../../components/ui/RewardsRegister";
 import Mission from "../../components/ui/Mission";
 import Services from "../../components/ui/Services";
 import Footer from "../../components/ui/Footer";
+import Navbar2 from "../../components/ui/Navbar2";
 
 export default function Home() {
   return (
     <div>
-      <Navbar></Navbar>
+      {/* <Navbar></Navbar> */}
+      <Navbar2></Navbar2>
       <Header></Header>
       <RewardsRegister></RewardsRegister>
       <Mission></Mission>

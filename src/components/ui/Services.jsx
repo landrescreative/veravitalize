@@ -23,6 +23,11 @@ const Container = styled.div`
 
     h1 {
       margin-left: 19%;
+
+      @media (max-width: 1024px) {
+        margin-left: 0;
+        text-align: center;
+      }
     }
   }
 

@@ -29,12 +29,20 @@ const Container = styled.div`
       line-height: 0.9;
       font-weight: 700;
       font-size: 6.5rem;
+
+      @media (max-width: 1024px) {
+        font-size: 4rem;
+      }
     }
 
     h2 {
       color: #393d3d;
       font-weight: 400;
       font-size: 3rem;
+
+      @media (max-width: 1024px) {
+        font-size: 2rem;
+      }
     }
 
     @media (max-width: 1024px) {
@@ -78,6 +86,7 @@ const Container = styled.div`
 
     @media (max-width: 1024px) {
       text-align: center;
+      width: 90%;
     }
   }
 `;

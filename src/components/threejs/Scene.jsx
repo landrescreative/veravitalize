@@ -48,7 +48,7 @@ export default function Scene() {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMappingExposure = 1;
-    renderer.setPixelRatio(window.devicePixelRatio);
+    // renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
     currentMount.appendChild(renderer.domElement);
 
@@ -80,6 +80,7 @@ export default function Scene() {
 
     // GLTF loader
     const gltfLoader = new GLTFLoader();
+    dracoLoader.setDecoderConfig({ type: "js" });
     gltfLoader.setDRACOLoader(dracoLoader);
 
     // Variable to see if the user is on mobile based on viewport width
@@ -88,7 +89,7 @@ export default function Scene() {
     var crema;
 
     // Load 3D model
-    gltfLoader.load("assets/models/cream.glb", function (gltf) {
+    gltfLoader.load("assets/models/cream2.glb", function (gltf) {
       gltf.scene.scale.set(5, 5, 5);
       gltf.scene.rotation.set(Math.PI * 0.05, Math.PI * 1.25, 0);
       gltf.scene.position.set(0, -4, 0);
