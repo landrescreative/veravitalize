@@ -9,7 +9,7 @@ const Container = styled.div`
   box-shadow: 0px 10px 10px 5px rgba(0, 0, 0, 0.2);
   padding: 15px 0px;
   background-color: #f2f2f2;
-  color: #f6f0da;
+  color: #9cbc97;
   border-radius: 20px;
 
   .form-card-header {

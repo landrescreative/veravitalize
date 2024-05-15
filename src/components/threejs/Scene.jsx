@@ -18,6 +18,7 @@ import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass";
+import { render } from "@testing-library/react";
 
 export default function Scene() {
   const mountRef = useRef(null);
@@ -29,14 +30,24 @@ export default function Scene() {
   useEffect(() => {
     const currentMount = mountRef.current;
 
+    // HDRI Loader
+    const hdriLoader = new RGBELoader();
+    hdriLoader.load("assets/hdr/studio.hdr", function (texture) {
+      texture.mapping = THREE.EquirectangularReflectionMapping;
+      scene.environment = texture;
+    });
+
     // Scene
     const scene = new THREE.Scene();
-
     // Renderer
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
+      antialias: true,
     });
-    renderer.physicallyCorrectLights = true;
+    // renderer.physicallyCorrectLights = true;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMappingExposure = 1;
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
     currentMount.appendChild(renderer.domElement);
@@ -47,7 +58,7 @@ export default function Scene() {
 
     // Camera and properties
     const camera = new THREE.PerspectiveCamera(
-      70,
+      50,
       currentMount.clientWidth / currentMount.clientHeight,
       0.1,
       100
@@ -59,14 +70,6 @@ export default function Scene() {
     /////////////////////////
     /// LOADERS AND 3D MODELS
     /////////////////////////
-
-    // HDRI Loader
-    const hdriLoader = new RGBELoader();
-    hdriLoader.load("assets/hdr/studio.hdr", function (texture) {
-      texture.mapping = THREE.EquirectangularReflectionMapping;
-      scene.environmentIntensity = 1;
-      scene.environment = texture;
-    });
 
     // Texture loader
     const loader = new THREE.TextureLoader();
@@ -85,10 +88,40 @@ export default function Scene() {
     var crema;
 
     // Load 3D model
-    gltfLoader.load("assets/models/skincare.glb", function (gltf) {
-      gltf.scene.scale.set(10, 10, 10);
-      gltf.scene.rotation.set(0, Math.PI * 0.5, 0);
+    gltfLoader.load("assets/models/cream.glb", function (gltf) {
+      gltf.scene.scale.set(5, 5, 5);
+      gltf.scene.rotation.set(Math.PI * 0.05, Math.PI * 1.25, 0);
       gltf.scene.position.set(0, -4, 0);
+      gltf.scene.traverse(function (child) {
+        if (child.name === "bottle") {
+          child.material.transparent = true;
+          child.material.transmission = 1;
+          child.material.opacity = 0.8;
+          child.material.roughness = 0.2;
+          child.material.chromaticAberration = 0;
+          child.material.ior = 1;
+          child.material.metalness = 0.4;
+        }
+
+        if (child.name === "tape") {
+          gsap.to(child.position, {
+            y: 1.5,
+            x: 0,
+            z: 0,
+            ease: "easeIn",
+            duration: 5,
+            scrollTrigger: {
+              trigger: ".services-header",
+              scrub: 1,
+              start: "top bottom",
+              end: "top top",
+              endTrigger: ".img-services",
+              markers: false,
+            },
+          });
+        }
+      });
+
       crema = gltf.scene;
 
       function setupScrollAnimation() {
@@ -96,18 +129,18 @@ export default function Scene() {
           scrollTrigger: {
             trigger: ".register-form",
             start: "top bottom",
-            endTrigger: ".img",
+            endTrigger: ".img-services",
             end: "bottom bottom",
             scrub: 1,
             invalidateOnRefresh: true,
           },
         });
 
-        tl.to(gltf.scene.position, { x: -7, y: -2, z: 4 }, 0)
-          .to(gltf.scene.position, { x: 0, y: -4, z: 6 }, 1)
+        tl.to(gltf.scene.position, { x: -6, y: -2, z: -1 }, 0)
+          .to(gltf.scene.position, { x: 0, y: -3, z: 6 }, 1)
           .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 1)
           .to(gltf.scene.position, { x: 5, y: -2, z: 2 }, 2)
-          .to(gltf.scene.rotation, { x: Math.PI * 0 }, 2);
+          .to(gltf.scene.rotation, { x: Math.PI * 0.2 }, 2);
 
         // gsap.to(gltf.scene.rotation, {
         //   duration: 15,
@@ -133,16 +166,13 @@ export default function Scene() {
           },
         });
 
-        tl.to(gltf.scene.position, { x: -9, y: -2.5, z: 7 }, 0)
-          .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 0)
-          .to(gltf.scene.rotation, { z: Math.PI * 1.5 }, 0)
-          .to(gltf.scene.position, { x: 0, y: -4, z: 15 }, 1)
-          .to(gltf.scene.rotation, { z: Math.PI * 1 }, 1)
+        tl.to(gltf.scene.position, { x: 0, y: 2, z: -4 }, 0)
+          .to(gltf.scene.rotation, { x: Math.PI * 0.2 }, 0)
+          .to(gltf.scene.position, { x: 0, y: -2, z: 0 }, 1)
           .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 1)
-          .to(gltf.scene.position, { x: 0, y: -15, z: 5 }, 2)
-          .to(gltf.scene.rotation, { z: Math.PI * 0 }, 2)
-          .to(gltf.scene.rotation, { x: Math.PI * 0 }, 2)
-          .to(gltf.scene.rotation, { y: Math.PI * 0.35 }, 2);
+          .to(gltf.scene.position, { x: 0, y: -4, z: 5 }, 2)
+          .to(gltf.scene.rotation, { z: Math.PI * 0.1 }, 2)
+          .to(gltf.scene.rotation, { x: Math.PI * 0 }, 2);
 
         // gsap.to(gltf.scene.rotation, {
         //   duration: 15,
@@ -164,63 +194,51 @@ export default function Scene() {
       scene.add(gltf.scene);
 
       // Load bar model neon
-      gltfLoader.load("assets/models/neon.gltf", function (gltf) {
-        // This traverse the model and adds a glow effect to the neon
+      gltfLoader.load("assets/models/gel.glb", function (gltf) {
+        gltf.scene.rotation.z = Math.PI * -0.05;
+        gltf.scene.rotation.y = Math.PI * 1;
+        gltf.scene.scale.set(2, 2, 2);
+        gltf.scene.position.set(-30, -7, 0);
+
         gltf.scene.traverse(function (child) {
           if (child.isMesh) {
-            child.material.emissiveIntensity = 6;
+            child.material.opacity = 0.9;
+            child.material.roughness = 0.8;
+            child.material.metalness = 0.8;
           }
         });
+        scene.add(gltf.scene);
 
-        // This traverse a specific mesh and adds a glow effect to the neon
-        gltf.scene.traverse(function (child) {
-          if (child.name === "Amarillo") {
-            child.material.emissive = new THREE.Color(0xffd900);
-            child.material.emissiveIntensity = 8;
-          }
-        });
-
-        gltf.scene.rotation.z = Math.PI * 0.05;
-        gltf.scene.scale.set(2, 2, 2);
-        gltf.scene.position.set(2, -14, 2);
-        // scene.add(gltf.scene);
-
-        gsap.to(
-          gltf.scene.position,
-          {
-            y: 30,
-            x: 0,
-            z: 0,
-            ease: "easeIn",
-            duration: 5,
-            scrollTrigger: {
-              trigger: ".register-maintext",
-              scrub: 1,
-              start: "top bottom",
-              end: "top top",
-              markers: false,
-            },
+        let tl2 = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".register-maintext",
+            endTrigger: ".mission-h1",
+            start: "top bottom",
+            end: "top top",
+            scrub: 1,
+            invalidateOnRefresh: true,
           },
-          0
-        );
+        });
+
+        tl2
+          .to(gltf.scene.position, { x: -12, y: -7, z: 0 }, 0)
+          .to(gltf.scene.position, { x: -24, y: -7, z: 0 }, 1);
       });
     });
 
     var textureLoader = new THREE.TextureLoader();
 
     // This adds images to the mission section
-    var missionImageTexture = textureLoader.load(
-      "assets/textures/img/beer_1.jpg"
-    );
+    var missionImageTexture = textureLoader.load("assets/textures/img/2.jpg");
     var missionImage = new THREE.Mesh(
       new THREE.PlaneGeometry(10, 15),
       new THREE.MeshBasicMaterial({ map: missionImageTexture })
     );
-    missionImage.position.set(50, 5, 0);
-    // scene.add(missionImage);
+    missionImage.position.set(30, 5, 0);
+    scene.add(missionImage);
 
     gsap.to(missionImage.position, {
-      x: 20,
+      x: 18,
       duration: 5,
       scrollTrigger: {
         trigger: ".mission-header",
@@ -231,18 +249,16 @@ export default function Scene() {
     });
 
     // This adds images to the mission section
-    var missionImageTexture_2 = textureLoader.load(
-      "assets/textures/img/beer_2.jpg"
-    );
+    var missionImageTexture_2 = textureLoader.load("assets/textures/img/1.jpg");
     var missionImage_2 = new THREE.Mesh(
       new THREE.PlaneGeometry(10, 15),
       new THREE.MeshBasicMaterial({ map: missionImageTexture_2 })
     );
-    missionImage_2.position.set(-50, -5, 0);
-    // scene.add(missionImage_2);
+    missionImage_2.position.set(-30, -5, 0);
+    scene.add(missionImage_2);
 
     gsap.to(missionImage_2.position, {
-      x: -22,
+      x: -18,
       duration: 5,
       scrollTrigger: {
         trigger: ".mission-header",
@@ -253,13 +269,14 @@ export default function Scene() {
     });
 
     // This add a background image to the header
-    var barBackgroundImage = textureLoader.load("assets/textures/img/bgc.jpg");
+    var barBackgroundImage = textureLoader.load("assets/textures/img/t.jpg");
     var backgroundHeader = new THREE.Mesh(
-      new THREE.PlaneGeometry(60, 30),
-      new THREE.MeshBasicMaterial({})
+      new THREE.PlaneGeometry(60, 25),
+      new THREE.MeshBasicMaterial({ envMapIntensity: 0 })
     );
+    backgroundHeader.position.set(0, 0, -5);
     backgroundHeader.material.map = barBackgroundImage;
-    // scene.add(backgroundHeader);
+    scene.add(backgroundHeader);
 
     gsap.to(backgroundHeader.position, {
       y: 30,
@@ -280,20 +297,13 @@ export default function Scene() {
     background.position.set(0, 0, -10);
     scene.add(background);
 
-    // Geometry that follows mouse
-    var geometry = new THREE.SphereGeometry(0.8, 16, 16);
-    var material = new THREE.MeshBasicMaterial({ color: 0x7bb661 });
-    var sphere = new THREE.Mesh(geometry, material);
-    sphere.position.set(0, 0, 10);
-    scene.add(sphere);
-
     /////////////////////////
     // SCENARIO
     /////////////////////////
 
     var stats = new Stats();
     stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.body.appendChild(stats.dom);
+    // document.body.appendChild(stats.dom);
 
     /////////////////////////
     ///// POST PROCESSING
@@ -309,9 +319,9 @@ export default function Scene() {
     // Bloom
     var bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.1,
-      0.3,
-      0.75
+      0.05,
+      1,
+      0
     );
     composer.addPass(bloomPass);
 
@@ -330,7 +340,12 @@ export default function Scene() {
     // Lights
     /////////////////////
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
-    scene.add(ambientLight);
+    // scene.add(ambientLight);
+
+    const pointLight = new THREE.PointLight(0xffffff, 0);
+    pointLight.position.set(0, 10, 2);
+    scene.add(pointLight);
+
     /////////////////////
     // Raycaster
     /////////////////////
@@ -381,22 +396,36 @@ export default function Scene() {
       // Parallax effect
       camera.position.x = pointer.x * 0.5;
       camera.position.y = pointer.y * 0.5;
-
-      // Makes geometry follows mouse
-      sphere.position.x = pointer.x * 20;
-      sphere.position.y = pointer.y * 17;
-
       // Raycaster
       raycaster.setFromCamera(pointer, camera);
 
       if (crema) {
         const hits = raycaster.intersectObjects([crema], true);
 
-        // Mouse leave effect
+        // Mouse hover
+
         if (hits.length > 0) {
           gsap.to(crema.scale, {
             onUpdate: () => {
               crema.rotation.y += 0.0005;
+            },
+          });
+        }
+
+        // Mouse leave effect
+        if (hits.length > 0) {
+          gsap.to(crema.scale, {
+            x: 5.5,
+            y: 5.5,
+            z: 5.5,
+            duration: 1,
+            onComplete: () => {
+              gsap.to(crema.scale, {
+                x: 5,
+                y: 5,
+                z: 5,
+                duration: 1,
+              });
             },
           });
         }

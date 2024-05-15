@@ -98,8 +98,8 @@ export default function RewardsRegister() {
         </h1>
       </div>
       <div className="register-form d-flex justify-content-between align-items-center enter-animation">
-        <div className="col-md-6 register-img"></div>
-        <div className="col-md-8 register-form ">
+        <div className="col-sm-3  col-md-6 register-img"></div>
+        <div className="col-md-10 col-l-10 register-form ">
           <h1 className="text-center font-weight-bold">
             With just a few clicks
           </h1>

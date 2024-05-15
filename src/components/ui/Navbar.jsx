@@ -23,7 +23,7 @@ const Navbar = () => {
   return (
     <Container className="container-fluid row align-items-center">
       <div className="brand-name">
-        <span>NATURE</span>
+        <span>VERAVITALIZE</span>
       </div>
       <Links
         className={
@@ -71,7 +71,7 @@ const rotate = keyframes`
 const Container = styled.div`
   position: fixed;
   top: 0;
-  height: 9svh;
+  height: 64px;
   padding: 0;
   margin: 0;
   width: 100%;
@@ -115,6 +115,7 @@ const Container = styled.div`
     background: none;
     z-index: 10;
     justify-self: end;
+    outline: none;
 
     // X icon
     span {
@@ -172,8 +173,8 @@ const Links = styled.div`
 
   // Burger menu
   &.active {
-    width: 100svw;
-    height: 100svh;
+    min-width: 97vw;
+    height: 100dvh;
     display: block;
     position: fixed;
     margin: auto;

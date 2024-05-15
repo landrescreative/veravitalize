@@ -19,7 +19,7 @@ const Container = styled.div`
   }
 
   .header_main_texts {
-    width: 90%;
+    width: 80%;
     text-align: center;
     padding-bottom: 15dvh;
     color: #393d3d;

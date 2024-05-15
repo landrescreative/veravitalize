@@ -13,8 +13,15 @@ const Container = styled.div`
   background-color: #393d3d;
   backdrop-filter: blur(18px) saturate(100%);
   -webkit-backdrop-filter: blur(18px) saturate(100%);
-  background-color: rgba(17, 16, 19, 0.85);
+  background-color: rgba(17, 16, 19, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.125);
+
+  span {
+    padding: 20px 20px;
+    font-size: 2rem;
+    color: #f2f2f2;
+    letter-spacing: 1.3px;
+  }
 
   img {
     width: 150px;
@@ -43,8 +50,10 @@ const Container = styled.div`
 export default function Footer() {
   return (
     <Container className="container-fluid d-flex flex-column justify-content-center align-items-center footer">
-      <img src={logo}></img>
-      <h1 className="text-center">Giving beer the importance it deserves</h1>
+      <span>VERAVITALIZE</span>
+      <h1 className="text-center">
+        Join our community and uncover the secret to radiant, healthy skin.
+      </h1>
       <div className="footer-social-links">
         <img src={instagram}></img>
         <img src={facebook}></img>

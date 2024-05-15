@@ -3,8 +3,8 @@ import styled from "styled-components";
 import gsap from "gsap";
 
 const Container = styled.div`
-  min-height: 100vh;
-  width: 100%;
+  min-height: 120vh;
+  width: 90%;
   color: #f6f0da;
 
   .contenedor {
@@ -17,6 +17,13 @@ const Container = styled.div`
   .services-header {
     height: 20%;
     color: #7bb661;
+    text-align: left;
+    align-items: flex-end;
+    justify-content: flex-start;
+
+    h1 {
+      margin-left: 19%;
+    }
   }
 
   .services-services {
@@ -38,7 +45,7 @@ const Container = styled.div`
     }
   }
 
-  .img {
+  .img-services {
     height: 100%;
     background-color: transparent;
 
@@ -69,12 +76,9 @@ export default function Services() {
   }, []);
 
   return (
-    <Container
-      ref={app}
-      className="container-fluid d-flex flex-column justify-content-center align-items-center"
-    >
+    <Container ref={app} className="container-fluid d-flex flex-column">
       <div className="services-header">
-        <h1 className="text-center p-5">Enhance results</h1>
+        <h1 className="p-5">Enhance results</h1>
       </div>
       <div className="contenedor">
         <div className="services-services row">
@@ -100,7 +104,7 @@ export default function Services() {
           </div>
           <div className="col-md-2"></div>
           <div className="col-md-5">
-            <div className="img"></div>
+            <div className="img-services"></div>
           </div>
         </div>
       </div>
