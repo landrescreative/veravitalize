@@ -1,9 +1,12 @@
 import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { useRef, useEffect } from "react";
 import React from "react";
 import Stats from "stats.js";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+// Animations
 
 // Loaders
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
@@ -13,6 +16,9 @@ import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 // Post Processing
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass";
+import { render } from "@testing-library/react";
 
 export default function Scene() {
   const mountRef = useRef(null);
@@ -32,32 +38,37 @@ export default function Scene() {
     });
 
     // Variable to see if the user is on mobile based on viewport width
-    const isMobile = window.innerWidth < 1024;
+    const isMobile = window.innerWidth < 364;
 
     // Scene
     const scene = new THREE.Scene();
     // Renderer
     const renderer = new THREE.WebGLRenderer({
-      // antialias: true,
+      alpha: true,
+      antialias: true,
     });
     // renderer.physicallyCorrectLights = true;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMappingExposure = 1;
-    renderer.setPixelRatio(1);
+    renderer.setPixelRatio(isMobile ? window.devicePixelRatio : 0.4);
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
     currentMount.appendChild(renderer.domElement);
+
+    // Camera group
+    const cameraGroup = new THREE.Group();
+    scene.add(cameraGroup);
 
     // Camera and properties
     const camera = new THREE.PerspectiveCamera(
       50,
       currentMount.clientWidth / currentMount.clientHeight,
-      0.01,
+      0.1,
       100
     );
     camera.lookAt(0, 0, 0);
     camera.position.set(0, 0, 20);
-    scene.add(camera);
+    cameraGroup.add(camera);
 
     /////////////////////////
     /// LOADERS AND 3D MODELS
@@ -215,8 +226,10 @@ export default function Scene() {
       });
     });
 
+    var textureLoader = new THREE.TextureLoader();
+
     // This adds images to the mission section
-    var missionImageTexture = loader.load("assets/textures/img/2.jpg");
+    var missionImageTexture = textureLoader.load("assets/textures/img/2.jpg");
     var missionImage = new THREE.Mesh(
       new THREE.PlaneGeometry(10, 15),
       new THREE.MeshBasicMaterial({ map: missionImageTexture })
@@ -236,7 +249,7 @@ export default function Scene() {
     });
 
     // This adds images to the mission section
-    var missionImageTexture_2 = loader.load("assets/textures/img/1.jpg");
+    var missionImageTexture_2 = textureLoader.load("assets/textures/img/1.jpg");
     var missionImage_2 = new THREE.Mesh(
       new THREE.PlaneGeometry(10, 15),
       new THREE.MeshBasicMaterial({ map: missionImageTexture_2 })
@@ -256,7 +269,7 @@ export default function Scene() {
     });
 
     // This add a background image to the header
-    var barBackgroundImage = loader.load("assets/textures/img/t.jpg");
+    var barBackgroundImage = textureLoader.load("assets/textures/img/t.jpg");
     var backgroundHeader = new THREE.Mesh(
       new THREE.PlaneGeometry(60, 25),
       new THREE.MeshBasicMaterial({ envMapIntensity: 0 })
@@ -290,7 +303,7 @@ export default function Scene() {
 
     var stats = new Stats();
     stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.body.appendChild(stats.dom);
+    // document.body.appendChild(stats.dom);
 
     /////////////////////////
     ///// POST PROCESSING
@@ -302,6 +315,14 @@ export default function Scene() {
 
     // Adding our shaders
     composer.addPass(renderScene);
+
+    /////////////////////
+    // Lights
+    /////////////////////
+
+    const pointLight = new THREE.PointLight(0xffffff, 0);
+    pointLight.position.set(0, 10, 2);
+    scene.add(pointLight);
 
     /////////////////////
     // Raycaster
@@ -334,10 +355,20 @@ export default function Scene() {
     };
     window.addEventListener("resize", resize);
 
+    // Clock
+    const clock = new THREE.Clock();
+    var previousTime = 0;
+
+    // var controls = new OrbitControls(camera, renderer.domElement);
+
     /////////////////////////
     // Animate scene
     /////////////////////////
     const animate = () => {
+      const elapsedTime = clock.getElapsedTime();
+      const deltaFilm = clock.getDelta();
+      const delta = elapsedTime - previousTime;
+      previousTime = elapsedTime;
       // Parallax effect
       camera.position.x = pointer.x * 0.5;
       camera.position.y = pointer.y * 0.5;
@@ -386,7 +417,7 @@ export default function Scene() {
 
       setTimeout(function () {
         requestAnimationFrame(animate);
-        composer.render(0.1);
+        composer.render(delta);
       }, 1000 / 75);
     };
 
