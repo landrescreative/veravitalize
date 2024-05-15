@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { useRef, useEffect } from "react";
 import React from "react";
-import Stats from "stats.js";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -31,16 +30,12 @@ export default function Scene() {
       scene.environment = texture;
     });
 
-    // Variable to see if the user is on mobile based on viewport width
-    const isMobile = window.innerWidth < 1024;
-
     // Scene
     const scene = new THREE.Scene();
     // Renderer
     const renderer = new THREE.WebGLRenderer({
       // antialias: true,
     });
-    // renderer.physicallyCorrectLights = true;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMappingExposure = 1;
@@ -80,7 +75,7 @@ export default function Scene() {
     gltfLoader.load("assets/models/cream.glb", function (gltf) {
       gltf.scene.scale.set(5, 5, 5);
       gltf.scene.rotation.set(Math.PI * 0.05, Math.PI * 1.25, 0);
-      gltf.scene.position.set(0, -4, 0);
+      gltf.scene.position.set(0, -4);
       gltf.scene.traverse(function (child) {
         if (child.name === "bottle") {
           child.material.transparent = true;
@@ -125,61 +120,50 @@ export default function Scene() {
           },
         });
 
-        tl.to(gltf.scene.position, { x: -6, y: -2, z: -1 }, 0)
-          .to(gltf.scene.position, { x: 0, y: -3, z: 6 }, 1)
-          .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 1)
-          .to(gltf.scene.position, { x: 5, y: -2, z: 2 }, 2)
-          .to(gltf.scene.rotation, { x: Math.PI * 0.2 }, 2);
-
-        // gsap.to(gltf.scene.rotation, {
-        //   duration: 15,
-        //   y: Math.PI * 1,
-        //   repeat: -1,
-        //   yoyo: true,
-        //   ease: "linear",
-        //   start: "top top",
-        //   end: "+=100",
-        // });
-      }
-
-      function setupScrollAnimationMobile() {
-        let tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: ".register-maintext",
-            start: "top bottom",
-            endTrigger: ".footer",
-            end: "top bottom",
-            scrub: 1,
-            markers: false,
-            invalidateOnRefresh: true,
+        tl.to(
+          gltf.scene.position,
+          {
+            x: () => {
+              return window.innerWidth > 360 ? -6 : 0;
+            },
+            y: -2,
+            z: () => {
+              return window.innerWidth > 360 ? -2 : -6;
+            },
           },
-        });
-
-        tl.to(gltf.scene.position, { x: 0, y: 2, z: -4 }, 0)
+          0
+        )
           .to(gltf.scene.rotation, { x: Math.PI * 0.2 }, 0)
-          .to(gltf.scene.position, { x: 0, y: -2, z: 0 }, 1)
+          .to(
+            gltf.scene.position,
+            {
+              x: 0,
+              y: -3,
+              z: () => {
+                return window.innerWidth > 360 ? 6 : 0;
+              },
+            },
+            1
+          )
           .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 1)
-          .to(gltf.scene.position, { x: 0, y: -4, z: 5 }, 2)
+          .to(
+            gltf.scene.position,
+            {
+              x: () => {
+                return window.innerWidth > 360 ? 5 : 0;
+              },
+              y: -2,
+              z: () => {
+                return window.innerWidth > 360 ? 2 : -10;
+              },
+            },
+            2
+          )
           .to(gltf.scene.rotation, { z: Math.PI * 0.1 }, 2)
-          .to(gltf.scene.rotation, { x: Math.PI * 0 }, 2);
-
-        // gsap.to(gltf.scene.rotation, {
-        //   duration: 15,
-        //   y: Math.PI * 1,
-        //   repeat: -1,
-        //   yoyo: true,
-        //   ease: "linear",
-        //   start: "top top",
-        //   end: "+=100",
-        // });
+          .to(gltf.scene.rotation, { x: Math.PI * 0.2 }, 2);
       }
 
-      if (isMobile) {
-        setupScrollAnimationMobile();
-      } else {
-        setupScrollAnimation();
-      }
-
+      setupScrollAnimation();
       scene.add(gltf.scene);
 
       // Load bar model neon
@@ -281,16 +265,12 @@ export default function Scene() {
       new THREE.PlaneGeometry(200, 200),
       new THREE.MeshBasicMaterial({ color: 0xfafffa })
     );
-    background.position.set(0, 0, -10);
+    background.position.set(0, 0, -30);
     scene.add(background);
 
     /////////////////////////
     // SCENARIO
     /////////////////////////
-
-    var stats = new Stats();
-    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.body.appendChild(stats.dom);
 
     /////////////////////////
     ///// POST PROCESSING
@@ -375,14 +355,6 @@ export default function Scene() {
           });
         }
       }
-
-      // Test
-
-      stats.begin();
-
-      // monitored code goes here
-
-      stats.end();
 
       setTimeout(function () {
         requestAnimationFrame(animate);
