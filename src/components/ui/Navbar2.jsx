@@ -40,7 +40,7 @@ const Container_Navbar = styled.div`
 
   h1 {
     font-family: "Montserrat", sans-serif;
-    font-size: 22px;
+    font-size: 16px;
     font-weight: 600;
     grid-column: 2 / 3;
     letter-spacing: 2px;
@@ -68,7 +68,7 @@ const Container_Navbar = styled.div`
       justify-content: space-around;
       position: fixed;
       left: -100vw;
-      background-color: rgba(0, 0, 0, 0.8);
+      background-color: rgba(0, 0, 0, 1);
       transition: left 0.5s ease-in-out;
     }
 
@@ -77,7 +77,7 @@ const Container_Navbar = styled.div`
     a {
       color: #ffffff;
       text-decoration: none;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 2px;

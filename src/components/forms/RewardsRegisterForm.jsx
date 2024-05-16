@@ -7,7 +7,8 @@ const Container = styled.div`
   height: 100%;
   width: 100%;
   box-shadow: 0px 10px 10px 5px rgba(0, 0, 0, 0.2);
-  padding: 15px 0px;
+  padding: 0px 0px;
+  padding-bottom: 25px;
   background-color: #f2f2f2;
   color: #9cbc97;
   border-radius: 20px;
@@ -48,6 +49,8 @@ const Container = styled.div`
       border-radius: 12px;
       box-shadow: 0px 5px 5px 2px rgba(0, 0, 0, 0.2);
       border: none;
+      outline: none;
+      text-decoration: none;
     }
   }
 `;

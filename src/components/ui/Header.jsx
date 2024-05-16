@@ -2,9 +2,11 @@ import React from "react";
 import styled from "styled-components";
 
 // Images and videos
-import drinkSVG from "../../assets/svg/header/icons8-bar.svg";
+import { PiPlantBold } from "react-icons/pi";
+
 import healthSVG from "../../assets/svg/header/icons8-salud-del-corazon.svg";
-import beerSVG from "../../assets/svg/header/icons8-cerveza.svg";
+import { GiHealthNormal } from "react-icons/gi";
+
 import rewardSVG from "../../assets/svg/header/icons8-premio.svg";
 
 import BarBackground from "../../assets/images/bar.png";
@@ -68,11 +70,17 @@ const Container = styled.div`
     width: 300px;
     margin: 20px 0px;
 
-    img {
+    img,
+    .icons {
       filter: invert(100%) sepia(90%) saturate(0%) hue-rotate(346deg)
         brightness(89%) contrast(111%);
       width: 50px;
+      color: #ffffff;
       margin-right: 5px;
+
+      @media (max-width: 1024px) {
+        width: 35px;
+      }
     }
 
     h1 {
@@ -103,7 +111,7 @@ export default function Header() {
         <div className="header_about_texts_left col-md-4 d-flex justify-content-center align-items-center flex-column">
           <div className="header_about_texts_spans">
             <h1>
-              <img src={drinkSVG}></img>
+              <PiPlantBold className="icons"></PiPlantBold>
               Refresh Your Skin with Our Pure Aloe Vera
             </h1>
             <h2>
@@ -127,7 +135,7 @@ export default function Header() {
         <div className="header_about_texts_right d-flex col-md-4 flex-column justify-content-center align-items-center">
           <div className="header_about_texts_spans">
             <h1>
-              <img src={beerSVG}></img>
+              <GiHealthNormal className="icons"></GiHealthNormal>
               Give Your Skin the Treatment It Deserves
             </h1>
             <h2>
