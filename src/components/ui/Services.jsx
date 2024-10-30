@@ -42,6 +42,13 @@ const Container = styled.div`
         background-color: #7bb661;
         border: none;
         border-radius: 12px;
+        transition: all 0.3s;
+
+        &:hover {
+          background-color: #9cbc97;
+          color: #f2f2f2;
+          box-shadow: 0px 5px 5px 2px rgba(0, 100, 0, 0.2);
+        }
       }
 
       @media (max-width: 1024px) {

@@ -51,6 +51,13 @@ const Container = styled.div`
       border: none;
       outline: none;
       text-decoration: none;
+      transition: all 0.3s;
+
+      &:hover {
+        background-color: #9cbc97;
+        color: #f2f2f2;
+        box-shadow: 0px 5px 5px 2px rgba(0, 100, 0, 0.2);
+      }
     }
   }
 `;
