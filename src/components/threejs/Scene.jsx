@@ -13,18 +13,28 @@ import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 
-export default function Scene() {
+export default function Scene({ onProgress, onLoaded }) {
   const mountRef = useRef(null);
   gsap.registerPlugin(ScrollTrigger);
   ScrollTrigger.defaults({
-    inmediateRender: false,
+    immediateRender: false,
   });
 
   useEffect(() => {
     const currentMount = mountRef.current;
 
+    // Loading Manager
+    const manager = new THREE.LoadingManager();
+    manager.onProgress = (url, itemsLoaded, itemsTotal) => {
+      const pct = Math.round((itemsLoaded / itemsTotal) * 100);
+      if (onProgress) onProgress(pct);
+    };
+    manager.onLoad = () => {
+      if (onLoaded) onLoaded();
+    };
+
     // HDRI Loader
-    const hdriLoader = new RGBELoader();
+    const hdriLoader = new RGBELoader(manager);
     hdriLoader.load("assets/hdr/studio.hdr", function (texture) {
       texture.mapping = THREE.EquirectangularReflectionMapping;
       scene.environment = texture;
@@ -59,23 +69,27 @@ export default function Scene() {
     /////////////////////////
 
     // Texture loader
-    const loader = new THREE.TextureLoader();
+    const loader = new THREE.TextureLoader(manager);
 
     // Draco loader
-    const dracoLoader = new DRACOLoader();
+    const dracoLoader = new DRACOLoader(manager);
     dracoLoader.setDecoderPath("/draco/");
 
     // GLTF loader
-    const gltfLoader = new GLTFLoader();
+    const gltfLoader = new GLTFLoader(manager);
     gltfLoader.setDRACOLoader(dracoLoader);
 
     var crema;
+    const cremaPivot = new THREE.Group();
+    cremaPivot.position.set(0, -4, 0);
+    cremaPivot.rotation.set(Math.PI * 0.05, Math.PI * 1.25, 0);
+    scene.add(cremaPivot);
 
     // Load 3D model
     gltfLoader.load("assets/models/cream.glb", function (gltf) {
-      gltf.scene.scale.set(5, 5, 5);
-      gltf.scene.rotation.set(Math.PI * 0.05, Math.PI * 1.25, 0);
-      gltf.scene.position.set(0, -4);
+      // Start in hidden entrance state inside pivot
+      gltf.scene.scale.set(0.001, 0.001, 0.001);
+      gltf.scene.position.set(0, -5, 0);
       gltf.scene.traverse(function (child) {
         if (child.name === "bottle") {
           child.material.transparent = true;
@@ -92,14 +106,13 @@ export default function Scene() {
             y: 1.5,
             x: 0,
             z: 0,
-            ease: "easeIn",
-            duration: 5,
+            ease: "none",
+            duration: 1,
             scrollTrigger: {
-              trigger: ".services-header",
+              trigger: "#routine",
               scrub: 1,
-              start: "top bottom",
-              end: "top top",
-              endTrigger: ".img-services",
+              start: "top 75%",
+              end: "center center",
               markers: false,
             },
           });
@@ -107,64 +120,177 @@ export default function Scene() {
       });
 
       crema = gltf.scene;
+      cremaPivot.add(gltf.scene);
 
       function setupScrollAnimation() {
-        let tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: ".register-form",
-            start: "top bottom",
-            endTrigger: ".img-services",
-            end: "bottom bottom",
-            scrub: 1,
-            invalidateOnRefresh: true,
-          },
-        });
-
-        tl.to(
-          gltf.scene.position,
+        // 1. Hero -> Register (100% complete when #register hits center center)
+        gsap.fromTo(
+          cremaPivot.position,
           {
-            x: () => {
-              return window.innerWidth > 360 ? -6 : 0;
+            x: 0,
+            y: -4,
+            z: 0,
+          },
+          {
+            x: () => (window.innerWidth > 768 ? -5.5 : 0),
+            y: () => (window.innerWidth > 768 ? -2 : -1.2),
+            z: () => (window.innerWidth > 768 ? -2 : -4.5),
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#register",
+              start: "top 95%",
+              end: "center center",
+              scrub: 1,
+              invalidateOnRefresh: true,
             },
+          }
+        );
+        gsap.fromTo(
+          cremaPivot.rotation,
+          {
+            x: Math.PI * 0.05,
+            y: Math.PI * 1.25,
+            z: 0,
+          },
+          {
+            x: Math.PI * 0.2,
+            y: Math.PI * 1.45,
+            z: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#register",
+              start: "top 95%",
+              end: "center center",
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+
+        // 2. Register -> Mission / About (100% complete when #about hits center center)
+        gsap.fromTo(
+          cremaPivot.position,
+          {
+            x: () => (window.innerWidth > 768 ? -5.5 : 0),
+            y: () => (window.innerWidth > 768 ? -2 : -1.2),
+            z: () => (window.innerWidth > 768 ? -2 : -4.5),
+          },
+          {
+            x: 0,
+            y: -3,
+            z: () => (window.innerWidth > 768 ? 5.5 : 0),
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#about",
+              start: "top 85%",
+              end: "center center",
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+        gsap.fromTo(
+          cremaPivot.rotation,
+          {
+            x: Math.PI * 0.2,
+            y: Math.PI * 1.45,
+            z: 0,
+          },
+          {
+            x: Math.PI * 0.45,
+            y: Math.PI * 1.75,
+            z: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#about",
+              start: "top 85%",
+              end: "center center",
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+
+        // 3. Mission / About -> Routine / Services (100% complete when #routine hits center center)
+        gsap.fromTo(
+          cremaPivot.position,
+          {
+            x: 0,
+            y: -3,
+            z: () => (window.innerWidth > 768 ? 5.5 : 0),
+          },
+          {
+            x: () => (window.innerWidth > 768 ? 5 : 0),
             y: -2,
-            z: () => {
-              return window.innerWidth > 360 ? -2 : -6;
+            z: () => (window.innerWidth > 768 ? 2 : -10),
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#routine",
+              start: "top 85%",
+              end: "center center",
+              scrub: 1,
+              invalidateOnRefresh: true,
             },
+          }
+        );
+        gsap.fromTo(
+          cremaPivot.rotation,
+          {
+            x: Math.PI * 0.45,
+            y: Math.PI * 1.75,
+            z: 0,
+          },
+          {
+            x: Math.PI * 0.2,
+            y: Math.PI * 2.05,
+            z: Math.PI * 0.08,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#routine",
+              start: "top 85%",
+              end: "center center",
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+      }
+
+      // Cinematic 3D Entrance Reveal Animation (operates on gltf.scene relative to cremaPivot)
+      const entranceTl = gsap.timeline({ delay: 0.2 });
+      entranceTl
+        .to(
+          gltf.scene.scale,
+          {
+            x: 5,
+            y: 5,
+            z: 5,
+            duration: 1.8,
+            ease: "power3.out",
           },
           0
         )
-          .to(gltf.scene.rotation, { x: Math.PI * 0.2 }, 0)
-          .to(
-            gltf.scene.position,
-            {
-              x: 0,
-              y: -3,
-              z: () => {
-                return window.innerWidth > 360 ? 6 : 0;
-              },
-            },
-            1
-          )
-          .to(gltf.scene.rotation, { x: Math.PI * 0.5 }, 1)
-          .to(
-            gltf.scene.position,
-            {
-              x: () => {
-                return window.innerWidth > 360 ? 5 : 0;
-              },
-              y: -2,
-              z: () => {
-                return window.innerWidth > 360 ? 2 : -10;
-              },
-            },
-            2
-          )
-          .to(gltf.scene.rotation, { z: Math.PI * 0.1 }, 2)
-          .to(gltf.scene.rotation, { x: Math.PI * 0.2 }, 2);
-      }
+        .to(
+          gltf.scene.position,
+          {
+            y: 0,
+            duration: 1.8,
+            ease: "power3.out",
+          },
+          0
+        );
+
+      // Ambient subtle breathing motion (relative inside cremaPivot, never fights ScrollTrigger)
+      gsap.to(gltf.scene.position, {
+        y: "-=0.18",
+        duration: 2.5,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: 2.1,
+      });
 
       setupScrollAnimation();
-      scene.add(gltf.scene);
 
       // Load bar model neon
       gltfLoader.load("assets/models/gel.glb", function (gltf) {
@@ -184,18 +310,18 @@ export default function Scene() {
 
         let tl2 = gsap.timeline({
           scrollTrigger: {
-            trigger: ".register-maintext",
-            endTrigger: ".mission-h1",
-            start: "top bottom",
-            end: "top top",
-            scrub: 1,
+            trigger: "#register",
+            endTrigger: "#about",
+            start: "top 80%",
+            end: "bottom 20%",
+            scrub: 1.2,
             invalidateOnRefresh: true,
           },
         });
 
         tl2
-          .to(gltf.scene.position, { x: -12, y: -7, z: 0 }, 0)
-          .to(gltf.scene.position, { x: -24, y: -7, z: 0 }, 1);
+          .to(gltf.scene.position, { x: -12, y: -7, z: 0, ease: "none", duration: 1 }, 0)
+          .to(gltf.scene.position, { x: -24, y: -7, z: 0, ease: "none", duration: 1 }, 1);
       });
     });
 
@@ -314,45 +440,46 @@ export default function Scene() {
     };
     window.addEventListener("resize", resize);
 
+    let isHovered = false;
+
     /////////////////////////
     // Animate scene
     /////////////////////////
     const animate = () => {
       // Parallax effect
-      camera.position.x = pointer.x * 0.5;
-      camera.position.y = pointer.y * 0.5;
+      camera.position.x = pointer.x * 0.4;
+      camera.position.y = pointer.y * 0.4;
       // Raycaster
       raycaster.setFromCamera(pointer, camera);
 
       if (crema) {
         const hits = raycaster.intersectObjects([crema], true);
 
-        // Mouse hover
-
         if (hits.length > 0) {
-          gsap.to(crema.scale, {
-            onUpdate: () => {
-              crema.rotation.y += 0.0005;
-            },
-          });
-        }
-
-        // Mouse leave effect
-        if (hits.length > 0) {
-          gsap.to(crema.scale, {
-            x: 5.5,
-            y: 5.5,
-            z: 5.5,
-            duration: 1,
-            onComplete: () => {
-              gsap.to(crema.scale, {
-                x: 5,
-                y: 5,
-                z: 5,
-                duration: 1,
-              });
-            },
-          });
+          crema.rotation.y += 0.005;
+          if (!isHovered) {
+            isHovered = true;
+            gsap.to(crema.scale, {
+              x: 5.3,
+              y: 5.3,
+              z: 5.3,
+              duration: 0.35,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
+          }
+        } else {
+          if (isHovered) {
+            isHovered = false;
+            gsap.to(crema.scale, {
+              x: 5,
+              y: 5,
+              z: 5,
+              duration: 0.4,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
+          }
         }
       }
 
@@ -366,8 +493,14 @@ export default function Scene() {
 
     // Clean scene
     return () => {
-      currentMount.removeChild(renderer.domElement);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("resize", resize);
+      if (renderer.domElement && currentMount.contains(renderer.domElement)) {
+        currentMount.removeChild(renderer.domElement);
+      }
+      renderer.dispose();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
